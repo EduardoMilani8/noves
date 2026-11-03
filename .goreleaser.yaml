@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+project_name: noves
+
+builds:
+  - id: noves
+    main: ./cmd/noves
+    binary: noves
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, windows, darwin]
+    goarch: [amd64, arm64]
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/EduardoMilani8/noves/internal/buildinfo.Version={{ .Version }}
+      - -X github.com/EduardoMilani8/noves/internal/buildinfo.Commit={{ .ShortCommit }}
+      - -X github.com/EduardoMilani8/noves/internal/buildinfo.Date={{ .Date }}
+
+archives:
+  - id: noves
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - README.en.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: checksums.txt
+
+# As notas vêm do CHANGELOG.md (veja .github/workflows/release.yml).
+changelog:
+  disable: true
+
+release:
+  prerelease: auto

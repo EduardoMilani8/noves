@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: notas da release a partir do CHANGELOG
+        run: |
+          versao="${GITHUB_REF_NAME#v}"
+          awk -v v="$versao" '
+            /^## \[/ { if (dentro) exit; if (index($0, "[" v "]")) { dentro = 1; next } }
+            dentro { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/notas.md"
+          test -s "$RUNNER_TEMP/notas.md" || { echo "CHANGELOG.md não tem a seção [$versao]"; exit 1; }
+          cat "$RUNNER_TEMP/notas.md"
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean --release-notes=${{ runner.temp }}/notas.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
