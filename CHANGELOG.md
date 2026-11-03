@@ -9,3 +9,8 @@ projeto adota o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ### Adicionado
 - Estrutura do projeto, documentação e guias da comunidade.
+- `noves version` e `noves doctor` (conexões, versão, ODS, dialeto, charset e
+  permissão de leitura, com senhas mascaradas).
+- Ambiente de teste com Firebird 5 e PostgreSQL: ERP sintético, banco migrado
+  e cinco divergências conhecidas.
+- CI com lint, testes, build cruzado e integração; release com GoReleaser.
