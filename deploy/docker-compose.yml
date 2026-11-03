@@ -1,0 +1,42 @@
+# Ambiente de teste do noves: um "ERP sintético" no Firebird e a versão
+# "migrada" no PostgreSQL. As senhas abaixo são só deste ambiente descartável.
+name: noves
+
+services:
+  firebird:
+    image: ${NOVES_FB_IMAGE:-firebirdsql/firebird:5}
+    environment:
+      FIREBIRD_ROOT_PASSWORD: ${NOVES_FB_ROOT_PASSWORD:-masterkey}
+      FIREBIRD_USER: noves
+      FIREBIRD_PASSWORD: ${NOVES_FB_PASSWORD:-noves}
+      FIREBIRD_DATABASE: erp.fdb
+      FIREBIRD_DATABASE_DEFAULT_CHARSET: WIN1252
+      FIREBIRD_DATABASE_PAGE_SIZE: 8192
+    ports:
+      - "${NOVES_FB_PORT:-3050}:3050"
+    volumes:
+      - ./firebird/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Os scripts de init rodam antes do servidor subir; se o isql conecta
+      # pela rede, o banco está pronto.
+      test: ["CMD-SHELL", "echo 'select 1 from rdb$$database;' | isql -b -q -user SYSDBA -password \"$$FIREBIRD_ROOT_PASSWORD\" localhost:/var/lib/firebird/data/erp.fdb"]
+      interval: 3s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+  postgres:
+    image: ${NOVES_PG_IMAGE:-postgres:18}
+    environment:
+      POSTGRES_USER: noves
+      POSTGRES_PASSWORD: ${NOVES_PG_PASSWORD:-noves}
+      POSTGRES_DB: erp
+    ports:
+      - "${NOVES_PG_PORT:-5433}:5432"
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U noves -d erp"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
