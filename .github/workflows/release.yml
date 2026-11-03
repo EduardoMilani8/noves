@@ -26,7 +26,7 @@ jobs:
           ' CHANGELOG.md > "$RUNNER_TEMP/notas.md"
           test -s "$RUNNER_TEMP/notas.md" || { echo "CHANGELOG.md não tem a seção [$versao]"; exit 1; }
           cat "$RUNNER_TEMP/notas.md"
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
           version: "~> v2"
