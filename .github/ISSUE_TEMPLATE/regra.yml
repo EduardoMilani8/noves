@@ -1,0 +1,19 @@
+name: Nova regra ou falso positivo
+description: Sugira uma regra do assess ou relate um achado errado
+labels: [regra]
+body:
+  - type: textarea
+    id: construcao
+    attributes:
+      label: Construção do Firebird
+      description: Um trecho mínimo de SQL/PSQL que mostra o caso.
+      render: sql
+    validations:
+      required: true
+  - type: textarea
+    id: postgres
+    attributes:
+      label: O que acontece no PostgreSQL?
+      description: Por que isso é um risco na migração e como resolver.
+    validations:
+      required: true
