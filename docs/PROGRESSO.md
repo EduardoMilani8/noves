@@ -2,6 +2,26 @@
 
 Checklist vivo do plano (`docs/PLANO.md`). Marque ao concluir.
 
+## Onde paramos (2026-11-03)
+
+**Fase 0 concluída** e na `main` (PR #6, CI verde, issues #1–#5 fechadas).
+Repositório: https://github.com/EduardoMilani8/noves
+
+**Próximo passo:** Fase 1 — `noves assess` (v0.1.0), na branch `fase-1-assess`.
+1. Ler o guia da Firebird Foundation (link em `docs/PLANO.md`, seção 3).
+2. Criar as issues da Fase 1 na milestone v0.1.0.
+3. Catálogo → tokenizer → regras → classificação de procedures → estimativa → relatórios.
+
+**Antes de começar no PC de casa:**
+- `sudo usermod -aG docker $USER` e fazer logout/login (o Docker recusava a conexão).
+- `golangci-lint` foi instalado com `go install` em `~/go/bin`; conferir se está no `PATH`.
+- Conferir o ambiente: `make up`, `make test-integration` e `go run ./cmd/noves doctor`.
+
+**Decisão pendente (Fase 2):** o plano manda comparar CHAR sem os espaços à
+direita por padrão, mas uma das divergências plantadas é "CHAR sem espaços".
+Com esse padrão ela não aparece. Opções: comparar CHAR literalmente quando o
+destino não for `char(n)`, ou mudar a divergência plantada.
+
 ## Fase 0 — Fundação
 - [x] Módulo Go e estrutura de diretórios
 - [x] Repositório público, topics e milestones v0.1.0–v1.0.0
@@ -14,7 +34,7 @@ Checklist vivo do plano (`docs/PLANO.md`). Marque ao concluir.
 - [x] `noves version` e `noves doctor`
 - [x] CI (lint, testes com -race, build cruzado, integração)
 - [x] Release com GoReleaser
-- [ ] Proteção da `main` exigindo CI verde
+- [x] Proteção da `main` exigindo CI verde (9 checks, histórico linear, sem force push)
 
 ### Notas para as próximas fases
 - O driver `nakagami/firebirdsql` remove os espaços à direita de CHAR, exceto
