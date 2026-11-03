@@ -1,0 +1,26 @@
+# Binários e artefatos de build
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+coverage.*
+
+# Credenciais e configuração local
+.env
+/noves.yaml
+
+# Relatórios gerados localmente
+/noves-report*
+
+# Bancos e logs locais
+*.fdb
+*.FDB
+trace*.log
+workload*.jsonl
+
+# Editores e sistema
+.idea/
+.vscode/
+*.swp
+.DS_Store
